@@ -15,7 +15,7 @@ function BottomTab(props) {
      });
     const openSearch = (() =>{
       if(props.opensearch){
-        props.opensearch();
+        props.opensearch("sasasas");
       }
     });
     return (
