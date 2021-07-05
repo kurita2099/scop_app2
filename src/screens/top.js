@@ -9,14 +9,28 @@ import {
   DrawerItems
 } from 'react-navigation';
 function Top(props){
-
+    const [url, setUrl] = React.useState("https://scop.cloud/");
     const stacknav = ((screen)=>{
-	  props.navigation.navigate(screen)
+	  //props.navigation.navigate(screen)
+    console.log(screen);
+    switch(screen){
+      case "Top":
+        setUrl("https://scop.cloud/");
+        break;
+      case "ManageScreen":
+        setUrl("https://scop.cloud/wp-admin/");
+        break;
+      case "NewPost":
+        setUrl("https://scop.cloud/wp-admin/edit.php");
+        break;
+      
+
+    }
   });
       return (
           <SafeAreaView style={{flex:1}}>
             <WebView
-                source={{uri: 'https://scop.cloud/'}}
+                source={{uri: url}}
                 style={styles.webview}
             />
               <BottomTab navdo={stacknav} style={styles.bottomTab}></BottomTab>
