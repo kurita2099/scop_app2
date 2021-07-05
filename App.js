@@ -12,7 +12,7 @@ export default class App extends Component {
 
     return (
              <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator headerMode="none">
                <Stack.Screen name="TOP" component={Top} />
                <Stack.Screen name="manage" component={mypage} />
       </Stack.Navigator>

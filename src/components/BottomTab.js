@@ -83,7 +83,8 @@ const styles = StyleSheet.create({
     color: "rgba(29,129,230,1)",
     fontSize: 50,
     marginLeft: 35,
-    marginTop: 3
+    marginTop: 3,
+    flex: 1,
   },
   icon4Row: {
     height: 50,
