@@ -2,7 +2,7 @@ import {createDrawerNavigator,DrawerNavigationProp,DrawerContentScrollView, Draw
 import React, { Component } from 'react'
 import {View, SafeAreaView, StyleSheet,Dimensions} from 'react-native'
 import { WebView } from 'react-native-webview';
-import BottomTab from "../components/bottomTab";
+import BottomTab from "../components/BottomTab";
 import {
   StackNavigator,
   DrawerNavigator,
