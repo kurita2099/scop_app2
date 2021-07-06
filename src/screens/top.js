@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
 import { WebView } from 'react-native-webview';
 import {createDrawerNavigator,DrawerNavigationProp,DrawerContentScrollView, DrawerItemList, DrawerItem} from '@react-navigation/drawer';
+import KeywordForm from "../components/KeywordForm";
+import AndButton from "../components/AndButton";
+import OrButton from "../components/OrButton";
+import DropDownPicker from 'react-native-dropdown-picker';
+
 import {View, 
   SafeAreaView, 
   StyleSheet, 
@@ -18,6 +23,11 @@ import {
 function Top(props){
     const [modalVisible, setModalVisible] = React.useState(false);
     const [url, setUrl] = React.useState("https://scop.cloud/");
+    const [collapsed, setCollapsed] = React.useState(false);
+    const [isand, setIsand] = React.useState(true);
+    const [category, setCategory] = React.useState({name:"カテゴリーから選ぶ"});
+    const [keyword, setKeyword] = React.useState("");
+
     const stacknav = ((screen)=>{
 	  //props.navigation.navigate(screen)
     console.log(screen);
@@ -40,13 +50,25 @@ function Top(props){
     console.log(param);
     setModalVisible(true);
   };
-      return (
-          <SafeAreaView style={{flex:1}}>
-            <WebView
-                source={{uri: url}}
-                style={styles.webview}
-            />
-            <Modal
+  
+  const onPressItem= ((key)=>{
+        console.log(key);
+        setCollapsed(false)
+        setCategory(key)
+      });
+  const onPressAndOrButton= ((key)=>{
+        console.log(key);
+        setIsand(key === 'and');
+      });   
+  const toggleMenu= (val)=> {setCollapsed(!val)};  
+  const receiveKeyword= (val)=> {setKeyword(val)}; 
+  return (
+    <SafeAreaView style={{ flex: 1 }}>
+      <WebView
+        source={{ uri: url }}
+        style={styles.webview}
+      />
+      <Modal
         animationType="slide"
         transparent={true}
         visible={modalVisible}
@@ -56,8 +78,42 @@ function Top(props){
         }}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <Text style={styles.modalText}>Hello World!</Text>
-
+          <View style={styles.keywordFormStack}>
+          <KeywordForm style={styles.keywordForm} sendKeyword={receiveKeyword}></KeywordForm>
+          <AndButton style={isand ? styles.materialButtonVioletActive : styles.materialButtonViolet}
+          onpress={onPressAndOrButton}
+          />
+          <OrButton style={!isand ? styles.materialButtonPinkActive : styles.materialButtonPink}
+          onpress={onPressAndOrButton}
+          />
+          </View>
+          <DropDownPicker
+              items={[
+                  {label: 'soccer', value: 'soccer'},
+                  {label: 'baseball', value: 'baseball'},
+                  {label: 'swimming', value: 'swimming'},
+                  {label: 'basket', value: 'basket'},
+                  {label: 'Valley', value: 'Valley'},
+              ]}
+              labelStyle = {{
+                  fontSize: 18,
+                  textAlign: 'center',
+              }}
+              containerStyle={{height: 40}}
+              style={{backgroundColor: 'hsla(0, 0%, 0%, 0.1)'}}
+              dropDownStyle={{backgroundColor: 'hsla(0, 0%, 0%, 0.05)'}}
+              onChangeItem={item => this.setState({
+                  country: item.value
+              })}
+              placeholder = "スポーツを選択してください" 
+              placeholderStyle = {{
+                  fontWeight: 'bold',
+                  textAlign: 'center'
+              }}
+              activeLabelStyle = {{color: 'red'}}
+            />
+          
+           
             <TouchableHighlight
               style={{ ...styles.openButton, backgroundColor: '#2196F3' }}
               onPress={() => {
@@ -68,9 +124,9 @@ function Top(props){
           </View>
         </View>
       </Modal>
-              <BottomTab opensearch={opensearch} navdo={stacknav} style={styles.bottomTab}></BottomTab>
-              </SafeAreaView>
-    );
+      <BottomTab opensearch={opensearch} navdo={stacknav} style={styles.bottomTab}></BottomTab>
+    </SafeAreaView>
+  );
 
 }
 const styles = StyleSheet.create({
@@ -80,7 +136,7 @@ bottomTab: {
   width: Dimensions.get('window').width
      },
 webview:{
-  height: Dimensions.get('window').height-105,
+  height: (Dimensions.get('window').height - 605),
   width: Dimensions.get('window').width,
   zIndex:2,elevation:2
 },
@@ -119,7 +175,62 @@ textStyle: {
 modalText: {
   marginBottom: 15,
   textAlign: 'center',
-}
+},
+materialButtonViolet: {
+  height: 23,
+  width: 91,
+  position: "absolute",
+  left: 210,
+  top: 10,
+  borderWidth: 1,
+  borderColor: "rgba(155,146,146,1)",
+  borderRadius: 5
+},
+materialButtonPink: {
+  height: 24,
+  width: 91,
+  position: "absolute",
+  left: 210,
+  top: 34,
+  borderWidth: 1,
+  borderColor: "rgba(155,146,146,1)",
+  borderRadius: 5
+},
+materialButtonVioletActive: {
+  height: 23,
+  width: 91,
+  position: "absolute",
+  left: 210,
+  top: 10,
+  borderWidth: 1,
+  borderColor: "rgba(155,146,146,1)",
+  backgroundColor: "rgba(61,78,142,1)",
+  borderRadius: 5
+},
+materialButtonPinkActive: {
+  height: 24,
+  width: 91,
+  position: "absolute",
+  left: 210,
+  top: 34,
+  borderWidth: 1,
+  borderColor: "rgba(155,146,146,1)",
+  backgroundColor: "rgba(61,78,142,1)",
+  borderRadius: 5
+},
+keywordForm: {
+  position: "absolute",
+  top: 10,
+  left: 0,
+  height: 47,
+  width: 301
+},
+keywordFormStack: {
+  width: 301,
+  height: 48,
+  marginTop: 20,
+  marginLeft: 1
+},
 
 
 })

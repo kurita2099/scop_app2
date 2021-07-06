@@ -1,34 +1,46 @@
-import {createDrawerNavigator,DrawerNavigationProp,DrawerContentScrollView, DrawerItemList, DrawerItem} from '@react-navigation/drawer';
-import React, { Component } from 'react'
-import {View, SafeAreaView, StyleSheet,Dimensions} from 'react-native'
-import { WebView } from 'react-native-webview';
-import BottomTab from "../components/BottomTab";
-import {
-  StackNavigator,
-  DrawerNavigator,
-  DrawerItems
-} from 'react-navigation';
-function mypage() {
-
+import React, { Component } from 'react';
+import { StyleSheet, View, Text } from 'react-native';
+import DropDownPicker from 'react-native-dropdown-picker';
+import Icon from 'react-native-vector-icons/Feather';
+export default class App extends React.Component {
+   
+    constructor(props) {
+      super(props);
+      this.state = {
+        country: 'uk',
+        countries: []
+      };
+    }
+    
+    render() {
       return (
-          <SafeAreaView style={{flex:1}}>
-            <WebView
-                source={{uri: 'https:https:scop.cloud/wp-admin/'}}
-                style={{zIndex:2,elevation:2}}
-            />
-              <BottomTab style={styles.bottomTab}></BottomTab>
-              </SafeAreaView>
-    );
+        <View style={styles.container}>
+ <DropDownPicker
+    items={[
+        {label: 'USA', value: 'usa', icon: () => <Icon name="flag" size={18} color="#900" />, hidden: true},
+        {label: 'UK', value: 'uk', icon: () => <Icon name="flag" size={18} color="#900" />},
+        {label: 'France', value: 'france', icon: () => <Icon name="flag" size={18} color="#900" />},
+    ]}
+    defaultValue={this.state.country}
+    containerStyle={{height: 40}}
+    style={{backgroundColor: '#fafafa'}}
+    itemStyle={{
+        justifyContent: 'flex-start'
+    }}
+    dropDownStyle={{backgroundColor: '#fafafa'}}
+    onChangeItem={item => this.setState({
+        country: item.value
+    })}
+    />
+        </View>
+      );
+    }
+    
   }
-const styles = StyleSheet.create({
-
-
-bottomTab: {
-
-     },
-
-
-
-})
-
-export default mypage;
+ 
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      marginTop: 80
+    },
+  });

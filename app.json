@@ -17,6 +17,8 @@
       "**/*"
     ],
     "ios": {
+      "bundleIdentifier": "cloud.scop.app0",
+      "buildNumber": "1",
       "supportsTablet": true
     },
     "android": {
