@@ -5,6 +5,7 @@ import KeywordForm from "../components/KeywordForm";
 import AndButton from "../components/AndButton";
 import OrButton from "../components/OrButton";
 import DropDownPicker from 'react-native-dropdown-picker';
+//import {Button, Card} from 'react-native-paper';
 
 import {View, 
   SafeAreaView, 
@@ -62,6 +63,20 @@ function Top(props){
       });   
   const toggleMenu= (val)=> {setCollapsed(!val)};  
   const receiveKeyword= (val)=> {setKeyword(val)}; 
+
+  const [myArray, setMyArray]= React.useState([]);
+  const [open, setOpen]= React.useState(false);
+  const [value, setValue]= React.useState(null);
+  const [items, setItems]= React.useState([
+    {label: 'Apple', value: 'apple'},
+    {label: 'Banana', value: 'banana'},
+    {label: 'Orange', value: 'orange'},
+    {label: 'Lemon', value: 'lemon'},
+  ]);
+  const test= ()=> {
+    console.log('Function called');
+    setMyArray([{name: 'hello'}]);
+  };
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <WebView
@@ -87,32 +102,33 @@ function Top(props){
           onpress={onPressAndOrButton}
           />
           </View>
+          <View style={styles.dropdownView}>
           <DropDownPicker
               items={[
-                  {label: 'soccer', value: 'soccer'},
-                  {label: 'baseball', value: 'baseball'},
-                  {label: 'swimming', value: 'swimming'},
-                  {label: 'basket', value: 'basket'},
-                  {label: 'Valley', value: 'Valley'},
+                {label: 'soccer', value: 'soccer'},
+                {label: 'baseball', value: 'baseball'},
+                {label: 'swimming', value: 'swimming'},
+                {label: 'basket', value: 'basket'},
+                {label: 'Valley', value: 'Valley'},
               ]}
               labelStyle = {{
                   fontSize: 18,
                   textAlign: 'center',
               }}
-              containerStyle={{height: 40}}
-              style={{backgroundColor: 'hsla(0, 0%, 0%, 0.1)'}}
+              
+              containerStyle={{position: 'relative',height:'20%',width: '100%', left: '0%', paddingTop: 10}}
+            
+              style={{backgroundColor: 'hsla(0, 0%, 0%, 0.05)'}}
               dropDownStyle={{backgroundColor: 'hsla(0, 0%, 0%, 0.05)'}}
-              onChangeItem={item => this.setState({
-                  country: item.value
-              })}
-              placeholder = "スポーツを選択してください" 
+              onChangeItem={item => console.log(item)}
+              placeholder = "選択してください" 
               placeholderStyle = {{
                   fontWeight: 'bold',
                   textAlign: 'center'
               }}
               activeLabelStyle = {{color: 'red'}}
             />
-          
+          </View>
            
             <TouchableHighlight
               style={{ ...styles.openButton, backgroundColor: '#2196F3' }}
@@ -124,13 +140,24 @@ function Top(props){
           </View>
         </View>
       </Modal>
+     
       <BottomTab opensearch={opensearch} navdo={stacknav} style={styles.bottomTab}></BottomTab>
     </SafeAreaView>
   );
 
 }
 const styles = StyleSheet.create({
-
+dropdownView:{
+  position: "absolute",
+  left: 40,
+  top: 120,
+  width: Dimensions.get('window').width*0.7,
+  borderColor: "rgba(29,129,230,1)",
+  borderRadius: 8,
+  borderWidth: 1,
+  elevation: 3000,
+  zIndex:3000,
+},
 
 bottomTab: {
   width: Dimensions.get('window').width
@@ -165,6 +192,7 @@ openButton: {
   backgroundColor: '#F194FF',
   borderRadius: 20,
   padding: 10,
+  marginTop: 150,
   elevation: 2,
 },
 textStyle: {

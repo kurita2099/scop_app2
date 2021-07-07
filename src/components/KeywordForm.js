@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
     borderRadius: 8
   },
   キーワード: {
-    fontFamily: "roboto-regular",
+   
     color: "#121212",
     height: 25,
     width: 200,
