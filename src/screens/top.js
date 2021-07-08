@@ -26,9 +26,49 @@ function Top(props){
     const [url, setUrl] = React.useState("https://scop.cloud/");
     const [collapsed, setCollapsed] = React.useState(false);
     const [isand, setIsand] = React.useState(true);
-    const [category, setCategory] = React.useState({name:"カテゴリーから選ぶ"});
+    const [category, setCategory] = React.useState({});
+    const [categories, setCategories] = React.useState([]);
     const [keyword, setKeyword] = React.useState("");
-
+    React.useEffect(() => {
+      console.log("step start")
+      //サーバーから取得
+      getData();
+    }, []);
+    const getData = async () => {
+    //APIからJSONデータを取得する
+    fetch('https://scop.cloud/wp-json/wp/v2/categories',{
+      
+        crossDomain:true,
+        method: 'GET',
+    })
+      .then((response) => {
+        return response.json()　//ここでBodyからJSONを返す
+      })
+      .then((result) => {
+        //取得したJSONデータを関数に渡す 
+        //console.log(result)
+        
+        setCategories(result.map(function( value ) {
+ 
+          //配列の各要素を2倍にする
+          return {'label':value.name,'value':value.id};
+       
+      }));
+    })
+    .catch((e) => {
+      console.log(e)  //エラーをキャッチし表示     
+    })
+    }
+    const searchUrl = ()　=>　{　
+      var query = '';
+      
+      query += '?search_keywords=' + keyword;
+      query += '&search_keywords_operator=' + (isand ? 'and' : 'or');
+      
+      query += '&search_cat1=' + (category.value ? category.value : 0);
+      console.log(query)
+      setUrl("https://scop.cloud/"+query);
+    }
     const stacknav = ((screen)=>{
 	  //props.navigation.navigate(screen)
     console.log(screen);
@@ -67,16 +107,8 @@ function Top(props){
   const [myArray, setMyArray]= React.useState([]);
   const [open, setOpen]= React.useState(false);
   const [value, setValue]= React.useState(null);
-  const [items, setItems]= React.useState([
-    {label: 'Apple', value: 'apple'},
-    {label: 'Banana', value: 'banana'},
-    {label: 'Orange', value: 'orange'},
-    {label: 'Lemon', value: 'lemon'},
-  ]);
-  const test= ()=> {
-    console.log('Function called');
-    setMyArray([{name: 'hello'}]);
-  };
+  
+ 
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <WebView
@@ -104,13 +136,7 @@ function Top(props){
           </View>
           <View style={styles.dropdownView}>
           <DropDownPicker
-              items={[
-                {label: 'soccer', value: 'soccer'},
-                {label: 'baseball', value: 'baseball'},
-                {label: 'swimming', value: 'swimming'},
-                {label: 'basket', value: 'basket'},
-                {label: 'Valley', value: 'Valley'},
-              ]}
+              items={categories}
               labelStyle = {{
                   fontSize: 18,
                   textAlign: 'center',
@@ -120,7 +146,10 @@ function Top(props){
             
               style={{backgroundColor: 'hsla(0, 0%, 0%, 0.05)'}}
               dropDownStyle={{backgroundColor: 'hsla(0, 0%, 0%, 0.05)'}}
-              onChangeItem={item => console.log(item)}
+              onChangeItem={item => {
+                console.log(JSON.stringify(item))
+                setCategory(item);
+              }}
               placeholder = "選択してください" 
               placeholderStyle = {{
                   fontWeight: 'bold',
@@ -134,8 +163,9 @@ function Top(props){
               style={{ ...styles.openButton, backgroundColor: '#2196F3' }}
               onPress={() => {
                 setModalVisible(!modalVisible);
+                searchUrl();
               }}>
-              <Text style={styles.textStyle}>Hide Modal</Text>
+              <Text style={styles.textStyle}>検索</Text>
             </TouchableHighlight>
           </View>
         </View>
