@@ -9,6 +9,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import {View, 
   SafeAreaView, 
   StyleSheet, 
+  
   Text, 
   Modal, 
   Alert, 
@@ -21,7 +22,7 @@ import {
   DrawerItems
 } from 'react-navigation';
 function Top(props){
-    const [modalVisible, setModalVisible] = React.useState(false);
+    const [modalVisible, setModalVisible] = React.useState(true);
     const [url, setUrl] = React.useState("https://scop.cloud/");
     const [collapsed, setCollapsed] = React.useState(false);
     const [isand, setIsand] = React.useState(true);
@@ -87,17 +88,35 @@ function Top(props){
           onpress={onPressAndOrButton}
           />
           </View>
+          <View style={styles.container}>
           <DropDownPicker
-          items={[
-              {label: 'English', value: 'en'},
-              {label: 'Deutsch', value: 'de'},
-              {label: 'French', value: 'fr'},
-          ]}
-          defaultIndex={0}
-          containerStyle={{height: 40}}
-          onChangeItem={item => console.log(item.label, item.value)}
-          />
-           
+              items={[
+                  {label: 'soccer', value: 'soccer'},
+                  {label: 'baseball', value: 'baseball'},
+                  {label: 'swimming', value: 'swimming'},
+                  {label: 'basket', value: 'basket'},
+                  {label: 'Valley', value: 'Valley'},
+              ]}
+              labelStyle = {{
+                  fontSize: 18,
+                  textAlign: 'center',
+              }}
+              containerStyle={{position: 'relative', width: '70%', left: '15%', paddingTop: 10}}
+              
+              style={{backgroundColor: 'hsla(0, 0%, 0%, 0.1)'}}
+              dropDownStyle={{backgroundColor: 'hsla(0, 0%, 0%, 0.05)'}}
+              onChangeItem={item => this.setState({
+                  country: item.value
+              })}
+              placeholder = "スポーツを選択してください" 
+              placeholderStyle = {{
+                  fontWeight: 'bold',
+                  textAlign: 'center'
+              }}
+              activeLabelStyle = {{color: 'red'}}
+            />
+          
+          </View>
             <TouchableHighlight
               style={{ ...styles.openButton, backgroundColor: '#2196F3' }}
               onPress={() => {
@@ -114,7 +133,10 @@ function Top(props){
 
 }
 const styles = StyleSheet.create({
-
+    container: {
+        flex: 1,
+        marginTop: 80
+      },
 
 bottomTab: {
   width: Dimensions.get('window').width

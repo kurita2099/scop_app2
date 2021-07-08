@@ -7,7 +7,7 @@ export default class App extends React.Component {
     constructor(props) {
       super(props);
       this.state = {
-        country: 'uk',
+        country: null,
         countries: []
       };
     }
@@ -17,20 +17,31 @@ export default class App extends React.Component {
         <View style={styles.container}>
  <DropDownPicker
     items={[
-        {label: 'USA', value: 'usa', icon: () => <Icon name="flag" size={18} color="#900" />, hidden: true},
+        {label: 'JAPAN', value: 'noselect', icon: () => <Icon name="flag" size={18} color="#900" />, hidden: true},
+        {label: 'USA', value: 'usa', icon: () => <Icon name="flag" size={18} color="#900" />},
         {label: 'UK', value: 'uk', icon: () => <Icon name="flag" size={18} color="#900" />},
         {label: 'France', value: 'france', icon: () => <Icon name="flag" size={18} color="#900" />},
+        
     ]}
-    defaultValue={this.state.country}
+    value={this.state.country}
     containerStyle={{height: 40}}
     style={{backgroundColor: '#fafafa'}}
     itemStyle={{
         justifyContent: 'flex-start'
     }}
     dropDownStyle={{backgroundColor: '#fafafa'}}
-    onChangeItem={item => this.setState({
-        country: item.value
-    })}
+    onChangeItem={item => {
+      this.setState({
+        country: item.value  
+    });
+    console.log(this.state.country);
+  }
+  }
+    placeholder = "選択してください" 
+    placeholderStyle = {{
+        fontWeight: 'bold',
+        textAlign: 'center'
+    }}
     />
         </View>
       );

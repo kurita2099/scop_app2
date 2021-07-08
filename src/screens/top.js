@@ -222,7 +222,7 @@ openButton: {
   backgroundColor: '#F194FF',
   borderRadius: 20,
   padding: 10,
-  marginTop: 150,
+  marginTop: 100,
   elevation: 2,
 },
 textStyle: {
