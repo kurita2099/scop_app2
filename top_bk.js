@@ -5,11 +5,11 @@ import KeywordForm from "../components/KeywordForm";
 import AndButton from "../components/AndButton";
 import OrButton from "../components/OrButton";
 import DropDownPicker from 'react-native-dropdown-picker';
-//import {Button, Card} from 'react-native-paper';
 
 import {View, 
   SafeAreaView, 
   StyleSheet, 
+  
   Text, 
   Modal, 
   Alert, 
@@ -22,53 +22,13 @@ import {
   DrawerItems
 } from 'react-navigation';
 function Top(props){
-    const [modalVisible, setModalVisible] = React.useState(false);
+    const [modalVisible, setModalVisible] = React.useState(true);
     const [url, setUrl] = React.useState("https://scop.cloud/");
     const [collapsed, setCollapsed] = React.useState(false);
     const [isand, setIsand] = React.useState(true);
-    const [category, setCategory] = React.useState({});
-    const [categories, setCategories] = React.useState([]);
+    const [category, setCategory] = React.useState({name:"カテゴリーから選ぶ"});
     const [keyword, setKeyword] = React.useState("");
-    React.useEffect(() => {
-      console.log("step start")
-      //サーバーから取得
-      getData();
-    }, []);
-    const getData = async () => {
-    //APIからJSONデータを取得する
-    fetch('https://scop.cloud/wp-json/wp/v2/categories',{
-      
-        crossDomain:true,
-        method: 'GET',
-    })
-      .then((response) => {
-        return response.json()　//ここでBodyからJSONを返す
-      })
-      .then((result) => {
-        //取得したJSONデータを関数に渡す 
-        //console.log(result)
-        
-        setCategories(result.map(function( value ) {
- 
-          //配列の各要素を2倍にする
-          return {'label':value.name,'value':value.id};
-       
-      }));
-    })
-    .catch((e) => {
-      console.log(e)  //エラーをキャッチし表示     
-    })
-    }
-    const searchUrl = ()　=>　{　
-      var query = '';
-      
-      query += '?search_keywords=' + keyword;
-      query += '&search_keywords_operator=' + (isand ? 'and' : 'or');
-      
-      query += '&search_cat1=' + (category.value ? category.value : 0);
-      console.log(query)
-      setUrl("https://scop.cloud/"+query);
-    }
+
     const stacknav = ((screen)=>{
 	  //props.navigation.navigate(screen)
     console.log(screen);
@@ -103,12 +63,6 @@ function Top(props){
       });   
   const toggleMenu= (val)=> {setCollapsed(!val)};  
   const receiveKeyword= (val)=> {setKeyword(val)}; 
-
-  const [myArray, setMyArray]= React.useState([]);
-  const [open, setOpen]= React.useState(false);
-  const [value, setValue]= React.useState(null);
-  
- 
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <WebView
@@ -134,60 +88,55 @@ function Top(props){
           onpress={onPressAndOrButton}
           />
           </View>
-          <View style={styles.dropdownView}>
+          <View style={styles.container}>
           <DropDownPicker
-              items={categories}
+              items={[
+                  {label: 'soccer', value: 'soccer'},
+                  {label: 'baseball', value: 'baseball'},
+                  {label: 'swimming', value: 'swimming'},
+                  {label: 'basket', value: 'basket'},
+                  {label: 'Valley', value: 'Valley'},
+              ]}
               labelStyle = {{
                   fontSize: 18,
                   textAlign: 'center',
               }}
+              containerStyle={{position: 'relative', width: '70%', left: '15%', paddingTop: 10}}
               
-              containerStyle={{position: 'relative',height:'20%',width: '100%', left: '0%', paddingTop: 10}}
-            
-              style={{backgroundColor: 'hsla(0, 0%, 0%, 0.05)'}}
+              style={{backgroundColor: 'hsla(0, 0%, 0%, 0.1)'}}
               dropDownStyle={{backgroundColor: 'hsla(0, 0%, 0%, 0.05)'}}
-              onChangeItem={item => {
-                console.log(JSON.stringify(item))
-                setCategory(item);
-              }}
-              placeholder = "選択してください" 
+              onChangeItem={item => this.setState({
+                  country: item.value
+              })}
+              placeholder = "スポーツを選択してください" 
               placeholderStyle = {{
                   fontWeight: 'bold',
                   textAlign: 'center'
               }}
               activeLabelStyle = {{color: 'red'}}
             />
+          
           </View>
-           
             <TouchableHighlight
               style={{ ...styles.openButton, backgroundColor: '#2196F3' }}
               onPress={() => {
                 setModalVisible(!modalVisible);
-                searchUrl();
               }}>
-              <Text style={styles.textStyle}>検索</Text>
+              <Text style={styles.textStyle}>Hide Modal</Text>
             </TouchableHighlight>
           </View>
         </View>
       </Modal>
-     
       <BottomTab opensearch={opensearch} navdo={stacknav} style={styles.bottomTab}></BottomTab>
     </SafeAreaView>
   );
 
 }
 const styles = StyleSheet.create({
-dropdownView:{
-  position: "absolute",
-  left: 40,
-  top: 120,
-  width: Dimensions.get('window').width*0.7,
-  borderColor: "rgba(29,129,230,1)",
-  borderRadius: 8,
-  borderWidth: 1,
-  elevation: 3000,
-  zIndex:3000,
-},
+    container: {
+        flex: 1,
+        marginTop: 80
+      },
 
 bottomTab: {
   width: Dimensions.get('window').width
@@ -222,7 +171,6 @@ openButton: {
   backgroundColor: '#F194FF',
   borderRadius: 20,
   padding: 10,
-  marginTop: 100,
   elevation: 2,
 },
 textStyle: {

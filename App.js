@@ -11,10 +11,11 @@ export default class App extends Component {
   render() {
 
     return (
-             <NavigationContainer>
+    <NavigationContainer>
       <Stack.Navigator headerMode="none">
-               <Stack.Screen name="TOP" component={Top} />
                <Stack.Screen name="manage" component={mypage} />
+               <Stack.Screen name="TOP" component={Top} />
+
       </Stack.Navigator>
     </NavigationContainer>
 
