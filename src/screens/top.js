@@ -144,8 +144,8 @@ function Top(props){
               
               containerStyle={{position: 'relative',height:'20%',width: '100%', left: '0%', paddingTop: 10}}
             
-              style={{backgroundColor: 'hsla(0, 0%, 0%, 0.05)'}}
-              dropDownStyle={{backgroundColor: 'hsla(0, 0%, 0%, 0.05)'}}
+              style={{backgroundColor: 'hsla(100, 100%, 100%, 1)'}}
+              dropDownStyle={{backgroundColor: 'hsla(100, 100%, 100%, 1)'}}
               onChangeItem={item => {
                 console.log(JSON.stringify(item))
                 setCategory(item);
