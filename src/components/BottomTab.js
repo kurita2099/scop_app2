@@ -30,7 +30,7 @@ function BottomTab(props) {
 	  />
 
 	  <IconButton
-	      icon="bell"
+	      icon="account"
 	      style={styles.icon}
 	      color={Colors.blue500}
 	      size={30}
