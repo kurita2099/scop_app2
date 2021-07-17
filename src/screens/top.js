@@ -21,6 +21,7 @@ import {
   DrawerNavigator,
   DrawerItems
 } from 'react-navigation';
+import { IconButton } from 'react-native-paper';
 function Top(props){
     const [modalVisible, setModalVisible] = React.useState(false);
     const [url, setUrl] = React.useState("https://scop.cloud/");
@@ -123,8 +124,9 @@ function Top(props){
           Alert.alert('Modal has been closed.');
 
         }}>
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
+          
+        <View style={styles.centeredView}>      
+          <View style={styles.modalView}> 
           <View style={styles.keywordFormStack}>
           <KeywordForm style={styles.keywordForm} sendKeyword={receiveKeyword}></KeywordForm>
           <AndButton style={isand ? styles.materialButtonVioletActive : styles.materialButtonViolet}
@@ -132,9 +134,10 @@ function Top(props){
           />
           <OrButton style={!isand ? styles.materialButtonPinkActive : styles.materialButtonPink}
           onpress={onPressAndOrButton}
-          />
-          </View>
-          <View style={styles.dropdownView}>
+          />  
+        </View>
+        
+          <View style={styles.dropdownView}>                        
           <DropDownPicker
               items={categories}
               labelStyle = {{
@@ -157,8 +160,7 @@ function Top(props){
               }}
               activeLabelStyle = {{color: 'red'}}
             />
-          </View>
-           
+          </View>           
             <TouchableHighlight
               style={{ ...styles.openButton, backgroundColor: '#2196F3' }}
               onPress={() => {
@@ -166,7 +168,10 @@ function Top(props){
                 searchUrl();
               }}>
               <Text style={styles.textStyle}>検索</Text>
-            </TouchableHighlight>
+            </TouchableHighlight>            
+          </View>
+          <View>            
+            <IconButton icon="chevron-down" size={40}  style={styles.closeView}/> 
           </View>
         </View>
       </Modal>
@@ -201,7 +206,12 @@ centeredView: {
   flex: 1,
   justifyContent: 'center',
   alignItems: 'center',
-  marginTop: 22,
+  marginTop: -450,
+},
+closeView: {
+  marginTop: -50,
+  top: -240,
+  marginLeft: 320,
 },
 modalView: {
   margin: 20,
