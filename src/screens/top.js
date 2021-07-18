@@ -24,6 +24,7 @@ import {
 import { IconButton } from 'react-native-paper';
 const HOMEURL =  "https://scop.cloud/";
 const SEARCHURL = "https://scop.cloud/";//上と内容が一生だけど、こっちはクエリがつく。
+const MANAGEURL = "https://scop.cloud/wp-admin/";
 const EDITPOSTURL = "https://scop.cloud/wp-admin/post-new.php";
 
 function Top(props){
@@ -74,24 +75,24 @@ function Top(props){
       
       query += '&search_cat1=' + (category.value ? category.value : 0);
       console.log(query)
-      setUrl("https://scop.cloud/"+query);
+      setUrl(SEARCHURL + query);
     }
     const stacknav = ((screen)=>{
 	  //props.navigation.navigate(screen)
     console.log(screen);
     switch(screen){
       case "Top":
-        if(currentUrl.current !== "https://scop.cloud/"){
-          reloadUrl( "https://scop.cloud/");
+        if(currentUrl.current !== HOMEURL){
+          reloadUrl( HOMEURL );
         }else{
-          setUrl("https://scop.cloud/");
+          setUrl(HOMEURL);
         }
         break;
       case "ManageScreen":
-        setUrl("https://scop.cloud/wp-admin/");
+        setUrl(MANAGEURL);
         break;
       case "NewPost":
-        setUrl("https://scop.cloud/wp-admin/post-new.php");
+        setUrl(EDITPOSTURL);
         break;
       
 
@@ -127,7 +128,7 @@ function Top(props){
 
   const [myArray, setMyArray]= React.useState([]);
   const [open, setOpen]= React.useState(false);
-  const [value, setValue]= React.useState(null);
+  const [value, setValue]=  React.useState(null);
   
  
   return (
@@ -140,9 +141,17 @@ function Top(props){
         // WEBVIEWのURLが変わるたびに呼ばれる　現在のURLを送信する
         //window.location.hrefごとに処理を行えるようにする条件分岐
         window.ReactNativeWebView.postMessage(window.location.href);
-
-        if(window.location.href == "https://scop.cloud/"){
+      
+        if(window.location.href == "${HOMEURL}"){
               document.querySelector('.banner_1').hidden = true;
+              }
+        if(window.location.href == "${EDITPOSTURL}"){
+          var wpw=document.querySelector("#wpwrap")
+          var inputs=document.querySelectorAll("input")
+          inputs.forEach(function (target) {
+              // 引数targetにはdiv要素が1つずつ渡されている
+              target.addEventListener('click', ()=>wpw.setAttribute("class",""));
+          });
               }
 
         true; // 必須
