@@ -61,7 +61,7 @@ function BottomTab(props) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "rgba(146,203,239,1)",
+    backgroundColor: "rgba(255,255,255,1)",
     flexDirection: "row"
   },
   icon4: {
