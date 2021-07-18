@@ -22,6 +22,10 @@ import {
   DrawerItems
 } from 'react-navigation';
 import { IconButton } from 'react-native-paper';
+const HOMEURL =  "https://scop.cloud/";
+const SEARCHURL = "https://scop.cloud/";//上と内容が一生だけど、こっちはクエリがつく。
+const EDITPOSTURL = "https://scop.cloud/wp-admin/post-new.php";
+
 function Top(props){
     const [modalVisible, setModalVisible] = React.useState(false);
     const [url, setUrl] = React.useState("https://scop.cloud/");
@@ -87,7 +91,7 @@ function Top(props){
         setUrl("https://scop.cloud/wp-admin/");
         break;
       case "NewPost":
-        setUrl("https://scop.cloud/wp-admin/edit.php");
+        setUrl("https://scop.cloud/wp-admin/post-new.php");
         break;
       
 
@@ -133,9 +137,14 @@ function Top(props){
         style={styles.webview}
         ref={ref}
         injectedJavaScript={`
-
         // WEBVIEWのURLが変わるたびに呼ばれる　現在のURLを送信する
+        //window.location.hrefごとに処理を行えるようにする条件分岐
         window.ReactNativeWebView.postMessage(window.location.href);
+
+        if(window.location.href == "https://scop.cloud/"){
+              document.querySelector('.banner_1').hidden = true;
+              }
+
         true; // 必須
       `}
       onMessage={(event)=>{
