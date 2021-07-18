@@ -171,7 +171,12 @@ function Top(props){
             </TouchableHighlight>            
           </View>
           <View>            
-            <IconButton icon="chevron-down" size={40}  style={styles.closeView}/> 
+            <IconButton icon="close" size={40}  style={styles.closeView}
+            onPress={() => {
+              setModalVisible(!modalVisible);
+              
+            }}
+            /> 
           </View>
         </View>
       </Modal>
@@ -209,7 +214,7 @@ centeredView: {
   marginTop: -450,
 },
 closeView: {
-  marginTop: -50,
+  marginTop: -20,
   top: -240,
   marginLeft: 320,
 },
