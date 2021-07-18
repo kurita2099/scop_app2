@@ -30,6 +30,8 @@ function Top(props){
     const [category, setCategory] = React.useState({});
     const [categories, setCategories] = React.useState([]);
     const [keyword, setKeyword] = React.useState("");
+    const ref = React.useRef(null);
+    const currentUrl = React.useRef("");
     React.useEffect(() => {
       console.log("step start")
       //サーバーから取得
@@ -75,7 +77,11 @@ function Top(props){
     console.log(screen);
     switch(screen){
       case "Top":
-        setUrl("https://scop.cloud/");
+        if(currentUrl.current !== "https://scop.cloud/"){
+          reloadUrl( "https://scop.cloud/");
+        }else{
+          setUrl("https://scop.cloud/");
+        }
         break;
       case "ManageScreen":
         setUrl("https://scop.cloud/wp-admin/");
@@ -88,6 +94,16 @@ function Top(props){
     }
     
   });
+
+  const reloadUrl = (adress)=>{
+    if(ref){
+    const jscode = `
+    window.location.href = "${adress}";
+    true;
+  `;
+    ref.current.injectJavaScript(jscode)
+    }
+  }
   const opensearch = (param)=>{
     console.log(param);
     setModalVisible(true);
@@ -115,6 +131,19 @@ function Top(props){
       <WebView
         source={{ uri: url }}
         style={styles.webview}
+        ref={ref}
+        injectedJavaScript={`
+
+        // WEBVIEWのURLが変わるたびに呼ばれる　現在のURLを送信する
+        window.ReactNativeWebView.postMessage(window.location.href);
+        true; // 必須
+      `}
+      onMessage={(event)=>{
+        const {data} = event.nativeEvent
+        currentUrl.current = data;
+        console.log(data)
+      }
+      }  
       />
       <Modal
         animationType="slide"
@@ -171,7 +200,12 @@ function Top(props){
             </TouchableHighlight>            
           </View>
           <View>            
-            <IconButton icon="chevron-down" size={40}  style={styles.closeView}/> 
+            <IconButton icon="close" size={40}  style={styles.closeView}
+            onPress={() => {
+              setModalVisible(!modalVisible);
+              
+            }}
+            /> 
           </View>
         </View>
       </Modal>
@@ -209,7 +243,7 @@ centeredView: {
   marginTop: -450,
 },
 closeView: {
-  marginTop: -50,
+  marginTop: -20,
   top: -240,
   marginLeft: 320,
 },
