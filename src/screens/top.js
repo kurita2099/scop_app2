@@ -144,6 +144,7 @@ function Top(props){
       
         if(window.location.href == "${HOMEURL}"){
               document.querySelector('.banner_1').hidden = true;
+              document.querySelector("#index_header_search").style.display ="none";
               }
         if(window.location.href == "${EDITPOSTURL}"){
           var wpw=document.querySelector("#wpwrap")
@@ -194,18 +195,19 @@ function Top(props){
               
               containerStyle={{position: 'relative',height:'20%',width: '100%', left: '0%', paddingTop: 10}}
             
-              style={{backgroundColor: 'hsla(100, 100%, 100%, 1)'}}
-              dropDownStyle={{backgroundColor: 'hsla(100, 100%, 100%, 1)'}}
+              style={{backgroundColor: 'hsla(100, 100%, 100%, 1)',color: 'black'}}
+              dropDownStyle={{backgroundColor: 'hsla(100, 100%, 100%, 1)',color: 'black'}}
               onChangeItem={item => {
                 console.log(JSON.stringify(item))
                 setCategory(item);
               }}
-              placeholder = "選択してください" 
+              placeholder = "カテゴリーから選ぶ" 
               placeholderStyle = {{
                   fontWeight: 'bold',
-                  textAlign: 'center'
+                  textAlign: 'left',
+                  color: 'black'
               }}
-              activeLabelStyle = {{color: 'red'}}
+              activeLabelStyle = {{color: 'black'}}
             />
           </View>           
             <TouchableHighlight
@@ -236,9 +238,9 @@ function Top(props){
 const styles = StyleSheet.create({
 dropdownView:{
   position: "absolute",
-  left: 40,
+  left: 35,
   top: 120,
-  width: Dimensions.get('window').width*0.7,
+  width: Dimensions.get('window').width*0.8,
   borderColor: "rgba(29,129,230,1)",
   borderRadius: 8,
   borderWidth: 1,
@@ -258,7 +260,7 @@ centeredView: {
   flex: 1,
   justifyContent: 'center',
   alignItems: 'center',
-  marginTop: -450,
+  marginTop: -200,
 },
 closeView: {
   marginTop: -20,
@@ -285,6 +287,7 @@ openButton: {
   borderRadius: 20,
   padding: 10,
   marginTop: 100,
+  width: Dimensions.get('window').width*0.5,
   elevation: 2,
 },
 textStyle: {
