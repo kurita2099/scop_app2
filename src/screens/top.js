@@ -201,6 +201,11 @@ function Top(props){
                 console.log(JSON.stringify(item))
                 setCategory(item);
               }}
+              labelStyle = {{
+                fontSize: 18,
+                color: 'blue',
+                textAlign: 'left',
+              }}
               placeholder = "カテゴリーから選ぶ" 
               placeholderStyle = {{
                   fontWeight: 'bold',
@@ -239,8 +244,8 @@ const styles = StyleSheet.create({
 dropdownView:{
   position: "absolute",
   left: 35,
-  top: 120,
-  width: Dimensions.get('window').width*0.8,
+  top: 90,
+  width: (400-100),
   borderColor: "rgba(29,129,230,1)",
   borderRadius: 8,
   borderWidth: 1,
@@ -249,6 +254,8 @@ dropdownView:{
 },
 
 bottomTab: {
+  zIndex: 6, // works on ios
+  elevation: 6, // works on android
   width: Dimensions.get('window').width
      },
 webview:{
@@ -260,18 +267,21 @@ centeredView: {
   flex: 1,
   justifyContent: 'center',
   alignItems: 'center',
-  marginTop: -200,
+  marginTop: (Dimensions.get('window').height*0.50)
 },
 closeView: {
   marginTop: -20,
-  top: -240,
-  marginLeft: 320,
+  top: -230,
+  marginLeft: 310,
 },
 modalView: {
   margin: 20,
   backgroundColor: 'white',
   borderRadius: 20,
-  padding: 35,
+  paddingTop: 30,
+  paddingBottom:20,
+  paddingLeft: 35,
+  paddingRight: 35,
   alignItems: 'center',
   shadowColor: '#000',
   shadowOffset: {
@@ -301,7 +311,7 @@ modalText: {
 },
 materialButtonViolet: {
   height: 23,
-  width: 91,
+  width:(91-40),
   position: "absolute",
   left: 210,
   top: 10,
@@ -311,7 +321,7 @@ materialButtonViolet: {
 },
 materialButtonPink: {
   height: 24,
-  width: 91,
+  width:(91-40),
   position: "absolute",
   left: 210,
   top: 34,
@@ -321,7 +331,7 @@ materialButtonPink: {
 },
 materialButtonVioletActive: {
   height: 23,
-  width: 91,
+  width:(91-40),
   position: "absolute",
   left: 210,
   top: 10,
@@ -332,7 +342,7 @@ materialButtonVioletActive: {
 },
 materialButtonPinkActive: {
   height: 24,
-  width: 91,
+  width:(91-40),
   position: "absolute",
   left: 210,
   top: 34,
@@ -346,12 +356,12 @@ keywordForm: {
   top: 10,
   left: 0,
   height: 47,
-  width: 301
+  width: 201
 },
 keywordFormStack: {
   width: 301,
   height: 48,
-  marginTop: 20,
+  marginTop: -10,
   marginLeft: 1
 },
 
