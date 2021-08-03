@@ -86,6 +86,7 @@ function Top(props){
           reloadUrl( HOMEURL );
         }else{
           setUrl(HOMEURL);
+          scrollTop();
         }
         break;
       case "ManageScreen":
@@ -104,6 +105,37 @@ function Top(props){
     if(ref){
     const jscode = `
     window.location.href = "${adress}";
+    true;
+  `;
+    ref.current.injectJavaScript(jscode)
+    }
+  }
+  const scrollTop = ()=>{
+    if(ref){
+    const jscode = `
+    if(getScrolled === undefined){
+      var isscroll = false;
+      function getScrolled() {
+        return window.pageYOffset;
+      }
+      //トップに移動する関数
+    function scrollToTop() {
+      var scrolled = getScrolled();
+      window.scrollTo( 0, Math.floor( scrolled / 2 ) );
+      if ( scrolled > 0 ) {
+        isscroll = true;
+        window.setTimeout( scrollToTop, 30 );
+      }else{
+        isscroll = false;
+      }
+    };
+    }else{
+      //alert("reload")
+      //alert(getScrolled())
+      if(!isscroll){
+        scrollToTop();
+      }
+    }
     true;
   `;
     ref.current.injectJavaScript(jscode)
