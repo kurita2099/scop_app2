@@ -24,6 +24,7 @@ import {
 import { IconButton } from 'react-native-paper';
 const HOMEURL =  "https://scop.cloud/";
 const SEARCHURL = "https://scop.cloud/";//上と内容が一生だけど、こっちはクエリがつく。
+const MANAGEURL = "https://scop.cloud/wp-admin/";
 const EDITPOSTURL = "https://scop.cloud/wp-admin/post-new.php";
 
 function Top(props){
@@ -74,24 +75,25 @@ function Top(props){
       
       query += '&search_cat1=' + (category.value ? category.value : 0);
       console.log(query)
-      setUrl("https://scop.cloud/"+query);
+      setUrl(SEARCHURL + query);
     }
     const stacknav = ((screen)=>{
 	  //props.navigation.navigate(screen)
     console.log(screen);
     switch(screen){
       case "Top":
-        if(currentUrl.current !== "https://scop.cloud/"){
-          reloadUrl( "https://scop.cloud/");
+        if(currentUrl.current !== HOMEURL){
+          reloadUrl( HOMEURL );
         }else{
-          setUrl("https://scop.cloud/");
+          setUrl(HOMEURL);
+          scrollTop();
         }
         break;
       case "ManageScreen":
-        setUrl("https://scop.cloud/wp-admin/");
+        setUrl(MANAGEURL);
         break;
       case "NewPost":
-        setUrl("https://scop.cloud/wp-admin/post-new.php");
+        setUrl(EDITPOSTURL);
         break;
       
 
@@ -103,6 +105,47 @@ function Top(props){
     if(ref){
     const jscode = `
     window.location.href = "${adress}";
+    true;
+  `;
+    ref.current.injectJavaScript(jscode)
+    }
+  }
+  const scrollTop = ()=>{
+    if(ref){
+    const jscode = `
+    if(getScrolled === undefined){
+      var isscroll = false;
+      function getScrolled() {
+        return window.pageYOffset;
+      }
+      //トップに移動する関数
+    function scrollToTop() {
+      var scrolled = getScrolled();
+      window.scrollTo( 0, Math.floor( scrolled / 2 ) );
+      if ( scrolled > 0 ) {
+        isscroll = true;
+        window.setTimeout( scrollToTop, 30 );
+      }else{
+        isscroll = false;
+      }
+    }
+    let _startY;
+    window.addEventListener('touchstart', e => {
+      _startY = e.touches[0].pageY;
+    });
+    window.addEventListener('touchmove', e => {
+      const y = e.touches[0].pageY;
+      //if( y > _startY && Math.abs(y - _startY) > 50){
+      //  alert("reflesh")
+      //}
+    }); 
+    }else{
+      //alert("reload")
+      //alert(getScrolled())
+      if(!isscroll){
+        scrollToTop();
+      }
+    }
     true;
   `;
     ref.current.injectJavaScript(jscode)
@@ -127,7 +170,7 @@ function Top(props){
 
   const [myArray, setMyArray]= React.useState([]);
   const [open, setOpen]= React.useState(false);
-  const [value, setValue]= React.useState(null);
+  const [value, setValue]=  React.useState(null);
   
  
   return (
@@ -140,11 +183,20 @@ function Top(props){
         // WEBVIEWのURLが変わるたびに呼ばれる　現在のURLを送信する
         //window.location.hrefごとに処理を行えるようにする条件分岐
         window.ReactNativeWebView.postMessage(window.location.href);
-
-        if(window.location.href == "https://scop.cloud/"){
+      
+        if(window.location.href == "${HOMEURL}"){
               document.querySelector('.banner_1').hidden = true;
+              document.querySelector("#index_header_search").style.display ="none";
               }
-
+        if(window.location.href == "${EDITPOSTURL}"){
+          var wpw=document.querySelector("#wpwrap")
+          var inputs=document.querySelectorAll("input")
+          inputs.forEach(function (target) {
+              // 引数targetにはdiv要素が1つずつ渡されている
+              target.addEventListener('click', ()=>wpw.setAttribute("class",""));
+          });
+              }
+        document.getElementById("footer").hidden=true
         true; // 必須
       `}
       onMessage={(event)=>{
@@ -185,18 +237,24 @@ function Top(props){
               
               containerStyle={{position: 'relative',height:'20%',width: '100%', left: '0%', paddingTop: 10}}
             
-              style={{backgroundColor: 'hsla(100, 100%, 100%, 1)'}}
-              dropDownStyle={{backgroundColor: 'hsla(100, 100%, 100%, 1)'}}
+              style={{backgroundColor: 'hsla(100, 100%, 100%, 1)',color: 'black'}}
+              dropDownStyle={{backgroundColor: 'hsla(100, 100%, 100%, 1)',color: 'black'}}
               onChangeItem={item => {
                 console.log(JSON.stringify(item))
                 setCategory(item);
               }}
-              placeholder = "選択してください" 
+              labelStyle = {{
+                fontSize: 18,
+                color: 'blue',
+                textAlign: 'left',
+              }}
+              placeholder = "カテゴリーから選ぶ" 
               placeholderStyle = {{
                   fontWeight: 'bold',
-                  textAlign: 'center'
+                  textAlign: 'left',
+                  color: 'black'
               }}
-              activeLabelStyle = {{color: 'red'}}
+              activeLabelStyle = {{color: 'black'}}
             />
           </View>           
             <TouchableHighlight
@@ -227,9 +285,9 @@ function Top(props){
 const styles = StyleSheet.create({
 dropdownView:{
   position: "absolute",
-  left: 40,
-  top: 120,
-  width: Dimensions.get('window').width*0.7,
+  left: 35,
+  top: 90,
+  width: (400-100),
   borderColor: "rgba(29,129,230,1)",
   borderRadius: 8,
   borderWidth: 1,
@@ -238,6 +296,8 @@ dropdownView:{
 },
 
 bottomTab: {
+  zIndex: 6, // works on ios
+  elevation: 6, // works on android
   width: Dimensions.get('window').width
      },
 webview:{
@@ -249,18 +309,21 @@ centeredView: {
   flex: 1,
   justifyContent: 'center',
   alignItems: 'center',
-  marginTop: -450,
+  marginTop: (Dimensions.get('window').height*0.50)
 },
 closeView: {
   marginTop: -20,
-  top: -240,
-  marginLeft: 320,
+  top: -230,
+  marginLeft: 310,
 },
 modalView: {
   margin: 20,
   backgroundColor: 'white',
   borderRadius: 20,
-  padding: 35,
+  paddingTop: 30,
+  paddingBottom:20,
+  paddingLeft: 35,
+  paddingRight: 35,
   alignItems: 'center',
   shadowColor: '#000',
   shadowOffset: {
@@ -276,6 +339,7 @@ openButton: {
   borderRadius: 20,
   padding: 10,
   marginTop: 100,
+  width: Dimensions.get('window').width*0.5,
   elevation: 2,
 },
 textStyle: {
@@ -289,7 +353,7 @@ modalText: {
 },
 materialButtonViolet: {
   height: 23,
-  width: 91,
+  width:(91-40),
   position: "absolute",
   left: 210,
   top: 10,
@@ -299,7 +363,7 @@ materialButtonViolet: {
 },
 materialButtonPink: {
   height: 24,
-  width: 91,
+  width:(91-40),
   position: "absolute",
   left: 210,
   top: 34,
@@ -309,7 +373,7 @@ materialButtonPink: {
 },
 materialButtonVioletActive: {
   height: 23,
-  width: 91,
+  width:(91-40),
   position: "absolute",
   left: 210,
   top: 10,
@@ -320,7 +384,7 @@ materialButtonVioletActive: {
 },
 materialButtonPinkActive: {
   height: 24,
-  width: 91,
+  width:(91-40),
   position: "absolute",
   left: 210,
   top: 34,
@@ -334,12 +398,12 @@ keywordForm: {
   top: 10,
   left: 0,
   height: 47,
-  width: 301
+  width: 201
 },
 keywordFormStack: {
   width: 301,
   height: 48,
-  marginTop: 20,
+  marginTop: -10,
   marginLeft: 1
 },
 
