@@ -186,7 +186,7 @@ function Top(props){
               target.addEventListener('click', ()=>wpw.setAttribute("class",""));
           });
               }
-
+        document.getElementById("footer").hidden=true
         true; // 必須
       `}
       onMessage={(event)=>{
