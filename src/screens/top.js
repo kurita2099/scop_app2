@@ -128,7 +128,17 @@ function Top(props){
       }else{
         isscroll = false;
       }
-    };
+    }
+    let _startY;
+    window.addEventListener('touchstart', e => {
+      _startY = e.touches[0].pageY;
+    });
+    window.addEventListener('touchmove', e => {
+      const y = e.touches[0].pageY;
+      //if( y > _startY && Math.abs(y - _startY) > 50){
+      //  alert("reflesh")
+      //}
+    }); 
     }else{
       //alert("reload")
       //alert(getScrolled())
