@@ -13,6 +13,7 @@ import {View,
   Text, 
   Modal, 
   Alert, 
+  ActivityIndicator,
   TouchableHighlight,
   Dimensions } from 'react-native'
 import BottomTab from "../components/BottomTab";
@@ -28,6 +29,8 @@ const MANAGEURL = "https://scop.cloud/wp-admin/";
 const EDITPOSTURL = "https://scop.cloud/wp-admin/post-new.php";
 
 function Top(props){
+    const [isLoading, setLoading] = React.useState(false);
+    const [animating, setAnimating] = React.useState(true);
     const [modalVisible, setModalVisible] = React.useState(false);
     const [url, setUrl] = React.useState("https://scop.cloud/");
     const [collapsed, setCollapsed] = React.useState(false);
@@ -76,6 +79,7 @@ function Top(props){
       query += '&search_cat1=' + (category.value ? category.value : 0);
       console.log(query)
       setUrl(SEARCHURL + query);
+      setLoading(true);
     }
     const stacknav = ((screen)=>{
 	  //props.navigation.navigate(screen)
@@ -86,13 +90,17 @@ function Top(props){
           reloadUrl( HOMEURL );
         }else{
           setUrl(HOMEURL);
+          setLoading(true);
+          scrollTop();
         }
         break;
       case "ManageScreen":
         setUrl(MANAGEURL);
+        setLoading(true);
         break;
       case "NewPost":
         setUrl(EDITPOSTURL);
+        setLoading(true);
         break;
       
 
@@ -104,6 +112,47 @@ function Top(props){
     if(ref){
     const jscode = `
     window.location.href = "${adress}";
+    true;
+  `;
+    ref.current.injectJavaScript(jscode)
+    }
+  }
+  const scrollTop = ()=>{
+    if(ref){
+    const jscode = `
+    if(getScrolled === undefined){
+      var isscroll = false;
+      function getScrolled() {
+        return window.pageYOffset;
+      }
+      //トップに移動する関数
+    function scrollToTop() {
+      var scrolled = getScrolled();
+      window.scrollTo( 0, Math.floor( scrolled / 2 ) );
+      if ( scrolled > 0 ) {
+        isscroll = true;
+        window.setTimeout( scrollToTop, 30 );
+      }else{
+        isscroll = false;
+      }
+    }
+    let _startY;
+    window.addEventListener('touchstart', e => {
+      _startY = e.touches[0].pageY;
+    });
+    window.addEventListener('touchmove', e => {
+      const y = e.touches[0].pageY;
+      //if( y > _startY && Math.abs(y - _startY) > 50){
+      //  alert("reflesh")
+      //}
+    }); 
+    }else{
+      //alert("reload")
+      //alert(getScrolled())
+      if(!isscroll){
+        scrollToTop();
+      }
+    }
     true;
   `;
     ref.current.injectJavaScript(jscode)
@@ -133,6 +182,7 @@ function Top(props){
  
   return (
     <SafeAreaView style={{ flex: 1 }}>
+      
       <WebView
         source={{ uri: url }}
         style={styles.webview}
@@ -143,8 +193,38 @@ function Top(props){
         window.ReactNativeWebView.postMessage(window.location.href);
       
         if(window.location.href == "${HOMEURL}"){
+          //バナーを消してメニューに項目をたす
               document.querySelector('.banner_1').hidden = true;
               document.querySelector("#index_header_search").style.display ="none";
+              
+              var ulds = document.querySelectorAll("#global_menu ul")
+              var uld = ulds[ulds.length-1];
+              var ld = document.querySelector("#global_menu li")
+              var cl = ld.cloneNode(true);
+              cl.setAttribute("id","menu-item-100")
+              uld.appendChild(cl)
+              cl = ld.cloneNode(true);
+              cl.setAttribute("id","menu-item-101")
+              uld.appendChild(cl)
+              cl = ld.cloneNode(true);
+              cl.setAttribute("id","menu-item-102")
+              uld.appendChild(cl)
+              
+              
+              var lld = document.querySelectorAll("#global_menu li a")
+              var leng = lld.length - 3
+              var node = lld[leng++]
+              node.innerText="利用規約";
+              node.setAttribute("href","https://scop.cloud/terms/")
+              node = lld[leng++]
+              node.innerText="プライバシーポリシー";
+              node.setAttribute("href","privacy-policy/")
+              node = lld[leng++]
+              node.innerText="運営会社";
+              node.setAttribute("href","https://minbar.jp/")
+              
+              
+
               }
         if(window.location.href == "${EDITPOSTURL}"){
           var wpw=document.querySelector("#wpwrap")
@@ -154,13 +234,14 @@ function Top(props){
               target.addEventListener('click', ()=>wpw.setAttribute("class",""));
           });
               }
-
+        document.getElementById("footer").hidden=true
         true; // 必須
       `}
       onMessage={(event)=>{
         const {data} = event.nativeEvent
         currentUrl.current = data;
         console.log(data)
+        setLoading(false);
       }
       }  
       />
@@ -201,6 +282,11 @@ function Top(props){
                 console.log(JSON.stringify(item))
                 setCategory(item);
               }}
+              labelStyle = {{
+                fontSize: 18,
+                color: 'blue',
+                textAlign: 'left',
+              }}
               placeholder = "カテゴリーから選ぶ" 
               placeholderStyle = {{
                   fontWeight: 'bold',
@@ -229,7 +315,11 @@ function Top(props){
           </View>
         </View>
       </Modal>
-     
+      {isLoading &&
+        <View style={styles.loading}>
+          <ActivityIndicator animating={animating} size="large" color="#0000ff" />
+        </View>
+      }
       <BottomTab opensearch={opensearch} navdo={stacknav} style={styles.bottomTab}></BottomTab>
     </SafeAreaView>
   );
@@ -239,8 +329,8 @@ const styles = StyleSheet.create({
 dropdownView:{
   position: "absolute",
   left: 35,
-  top: 120,
-  width: Dimensions.get('window').width*0.8,
+  top: 90,
+  width: (400-100),
   borderColor: "rgba(29,129,230,1)",
   borderRadius: 8,
   borderWidth: 1,
@@ -249,6 +339,8 @@ dropdownView:{
 },
 
 bottomTab: {
+  zIndex: 6, // works on ios
+  elevation: 6, // works on android
   width: Dimensions.get('window').width
      },
 webview:{
@@ -260,18 +352,21 @@ centeredView: {
   flex: 1,
   justifyContent: 'center',
   alignItems: 'center',
-  marginTop: -200,
+  marginTop: (Dimensions.get('window').height*0.50)
 },
 closeView: {
   marginTop: -20,
-  top: -240,
-  marginLeft: 320,
+  top: -230,
+  marginLeft: 310,
 },
 modalView: {
   margin: 20,
   backgroundColor: 'white',
   borderRadius: 20,
-  padding: 35,
+  paddingTop: 30,
+  paddingBottom:20,
+  paddingLeft: 35,
+  paddingRight: 35,
   alignItems: 'center',
   shadowColor: '#000',
   shadowOffset: {
@@ -301,7 +396,7 @@ modalText: {
 },
 materialButtonViolet: {
   height: 23,
-  width: 91,
+  width:(91-40),
   position: "absolute",
   left: 210,
   top: 10,
@@ -311,7 +406,7 @@ materialButtonViolet: {
 },
 materialButtonPink: {
   height: 24,
-  width: 91,
+  width:(91-40),
   position: "absolute",
   left: 210,
   top: 34,
@@ -321,7 +416,7 @@ materialButtonPink: {
 },
 materialButtonVioletActive: {
   height: 23,
-  width: 91,
+  width:(91-40),
   position: "absolute",
   left: 210,
   top: 10,
@@ -332,7 +427,7 @@ materialButtonVioletActive: {
 },
 materialButtonPinkActive: {
   height: 24,
-  width: 91,
+  width:(91-40),
   position: "absolute",
   left: 210,
   top: 34,
@@ -346,16 +441,24 @@ keywordForm: {
   top: 10,
   left: 0,
   height: 47,
-  width: 301
+  width: 201
 },
 keywordFormStack: {
   width: 301,
   height: 48,
-  marginTop: 20,
+  marginTop: -10,
   marginLeft: 1
 },
 
-
+loading: {
+  position: 'absolute',
+  left: 0,
+  right: 0,
+  top: 0,
+  bottom: 0,
+  alignItems: 'center',
+  justifyContent: 'center'
+}
 })
 
 export default Top;
