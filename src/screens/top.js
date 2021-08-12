@@ -26,7 +26,7 @@ import { IconButton } from 'react-native-paper';
 const HOMEURL =  "https://scop.cloud/";
 const SEARCHURL = "https://scop.cloud/";//上と内容が一生だけど、こっちはクエリがつく。
 const MANAGEURL = "https://scop.cloud/wp-admin/";
-const EDITPOSTURL = "https://scop.cloud/wp-admin/edit.php";
+const EDITPOSTURL = "https://scop.cloud/wp-admin/post-new.php";
 
 function Top(props){
     const [isLoading, setLoading] = React.useState(false);
@@ -78,7 +78,8 @@ function Top(props){
       
       query += '&search_cat1=' + (category.value ? category.value : 0);
       console.log(query)
-      setUrl(SEARCHURL + query);
+      //setUrl(SEARCHURL + query);
+      reloadUrl(SEARCHURL + query);
       setLoading(true);
     }
     const stacknav = ((screen)=>{
@@ -90,17 +91,20 @@ function Top(props){
           reloadUrl( HOMEURL );
           setLoading(true);
         }else{
-          setUrl(HOMEURL);
-         
+          //setUrl(HOMEURL);
+          reloadUrl(HOMEURL);
           scrollTop();
         }
         break;
       case "ManageScreen":
-        setUrl(MANAGEURL);
+        //setUrl(MANAGEURL);
+        reloadUrl(MANAGEURL);
         setLoading(true);
         break;
       case "NewPost":
-        setUrl(EDITPOSTURL);
+
+        //setUrl(EDITPOSTURL);
+        reloadUrl(EDITPOSTURL);
         setLoading(true);
         break;
       
@@ -118,6 +122,16 @@ function Top(props){
     ref.current.injectJavaScript(jscode)
     }
   }
+  const changeUrl = (adress)=>{
+    if(ref){
+    const jscode = `
+    window.location.href = "${adress}";
+    true;
+  `;
+    }
+  }
+  
+  
   const scrollTop = ()=>{
     if(ref){
     const jscode = `
