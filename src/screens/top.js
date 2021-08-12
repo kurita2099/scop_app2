@@ -185,8 +185,38 @@ function Top(props){
         window.ReactNativeWebView.postMessage(window.location.href);
       
         if(window.location.href == "${HOMEURL}"){
+          //バナーを消してメニューに項目をたす
               document.querySelector('.banner_1').hidden = true;
               document.querySelector("#index_header_search").style.display ="none";
+              
+              var ulds = document.querySelectorAll("#global_menu ul")
+              var uld = ulds[ulds.length-1];
+              var ld = document.querySelector("#global_menu li")
+              var cl = ld.cloneNode(true);
+              cl.setAttribute("id","menu-item-100")
+              uld.appendChild(cl)
+              cl = ld.cloneNode(true);
+              cl.setAttribute("id","menu-item-101")
+              uld.appendChild(cl)
+              cl = ld.cloneNode(true);
+              cl.setAttribute("id","menu-item-102")
+              uld.appendChild(cl)
+              
+              
+              var lld = document.querySelectorAll("#global_menu li a")
+              var leng = lld.length - 3
+              var node = lld[leng++]
+              node.innerText="利用規約";
+              node.setAttribute("href","https://scop.cloud/terms/")
+              node = lld[leng++]
+              node.innerText="プライバシーポリシー";
+              node.setAttribute("href","privacy-policy/")
+              node = lld[leng++]
+              node.innerText="運営会社";
+              node.setAttribute("href","https://minbar.jp/")
+              
+              
+
               }
         if(window.location.href == "${EDITPOSTURL}"){
           var wpw=document.querySelector("#wpwrap")
