@@ -13,6 +13,7 @@ import {View,
   Text, 
   Modal, 
   Alert, 
+  ActivityIndicator,
   TouchableHighlight,
   Dimensions } from 'react-native'
 import BottomTab from "../components/BottomTab";
@@ -28,6 +29,8 @@ const MANAGEURL = "https://scop.cloud/wp-admin/";
 const EDITPOSTURL = "https://scop.cloud/wp-admin/post-new.php";
 
 function Top(props){
+    const [isLoading, setLoading] = React.useState(false);
+    const [animating, setAnimating] = React.useState(true);
     const [modalVisible, setModalVisible] = React.useState(false);
     const [url, setUrl] = React.useState("https://scop.cloud/");
     const [collapsed, setCollapsed] = React.useState(false);
@@ -76,6 +79,7 @@ function Top(props){
       query += '&search_cat1=' + (category.value ? category.value : 0);
       console.log(query)
       setUrl(SEARCHURL + query);
+      setLoading(true);
     }
     const stacknav = ((screen)=>{
 	  //props.navigation.navigate(screen)
@@ -86,14 +90,17 @@ function Top(props){
           reloadUrl( HOMEURL );
         }else{
           setUrl(HOMEURL);
+          setLoading(true);
           scrollTop();
         }
         break;
       case "ManageScreen":
         setUrl(MANAGEURL);
+        setLoading(true);
         break;
       case "NewPost":
         setUrl(EDITPOSTURL);
+        setLoading(true);
         break;
       
 
@@ -175,6 +182,7 @@ function Top(props){
  
   return (
     <SafeAreaView style={{ flex: 1 }}>
+      
       <WebView
         source={{ uri: url }}
         style={styles.webview}
@@ -233,6 +241,7 @@ function Top(props){
         const {data} = event.nativeEvent
         currentUrl.current = data;
         console.log(data)
+        setLoading(false);
       }
       }  
       />
@@ -306,7 +315,11 @@ function Top(props){
           </View>
         </View>
       </Modal>
-     
+      {isLoading &&
+        <View style={styles.loading}>
+          <ActivityIndicator animating={animating} size="large" color="#0000ff" />
+        </View>
+      }
       <BottomTab opensearch={opensearch} navdo={stacknav} style={styles.bottomTab}></BottomTab>
     </SafeAreaView>
   );
@@ -437,7 +450,15 @@ keywordFormStack: {
   marginLeft: 1
 },
 
-
+loading: {
+  position: 'absolute',
+  left: 0,
+  right: 0,
+  top: 0,
+  bottom: 0,
+  alignItems: 'center',
+  justifyContent: 'center'
+}
 })
 
 export default Top;
