@@ -13,6 +13,7 @@ import {View,
   Text, 
   Modal, 
   Alert, 
+  ActivityIndicator,
   TouchableHighlight,
   Dimensions } from 'react-native'
 import BottomTab from "../components/BottomTab";
@@ -28,6 +29,8 @@ const MANAGEURL = "https://scop.cloud/wp-admin/";
 const EDITPOSTURL = "https://scop.cloud/wp-admin/post-new.php";
 
 function Top(props){
+    const [isLoading, setLoading] = React.useState(false);
+    const [animating, setAnimating] = React.useState(true);
     const [modalVisible, setModalVisible] = React.useState(false);
     const [url, setUrl] = React.useState("https://scop.cloud/");
     const [collapsed, setCollapsed] = React.useState(false);
@@ -76,6 +79,7 @@ function Top(props){
       query += '&search_cat1=' + (category.value ? category.value : 0);
       console.log(query)
       setUrl(SEARCHURL + query);
+      setLoading(true);
     }
     const stacknav = ((screen)=>{
 	  //props.navigation.navigate(screen)
@@ -86,14 +90,17 @@ function Top(props){
           reloadUrl( HOMEURL );
         }else{
           setUrl(HOMEURL);
+          setLoading(true);
           scrollTop();
         }
         break;
       case "ManageScreen":
         setUrl(MANAGEURL);
+        setLoading(true);
         break;
       case "NewPost":
         setUrl(EDITPOSTURL);
+        setLoading(true);
         break;
       
 
@@ -175,6 +182,7 @@ function Top(props){
  
   return (
     <SafeAreaView style={{ flex: 1 }}>
+      
       <WebView
         source={{ uri: url }}
         style={styles.webview}
@@ -185,8 +193,38 @@ function Top(props){
         window.ReactNativeWebView.postMessage(window.location.href);
       
         if(window.location.href == "${HOMEURL}"){
+          //バナーを消してメニューに項目をたす
               document.querySelector('.banner_1').hidden = true;
               document.querySelector("#index_header_search").style.display ="none";
+              
+              var ulds = document.querySelectorAll("#global_menu ul")
+              var uld = ulds[ulds.length-1];
+              var ld = document.querySelector("#global_menu li")
+              var cl = ld.cloneNode(true);
+              cl.setAttribute("id","menu-item-100")
+              uld.appendChild(cl)
+              cl = ld.cloneNode(true);
+              cl.setAttribute("id","menu-item-101")
+              uld.appendChild(cl)
+              cl = ld.cloneNode(true);
+              cl.setAttribute("id","menu-item-102")
+              uld.appendChild(cl)
+              
+              
+              var lld = document.querySelectorAll("#global_menu li a")
+              var leng = lld.length - 3
+              var node = lld[leng++]
+              node.innerText="利用規約";
+              node.setAttribute("href","https://scop.cloud/terms/")
+              node = lld[leng++]
+              node.innerText="プライバシーポリシー";
+              node.setAttribute("href","privacy-policy/")
+              node = lld[leng++]
+              node.innerText="運営会社";
+              node.setAttribute("href","https://minbar.jp/")
+              
+              
+
               }
         if(window.location.href == "${EDITPOSTURL}"){
           var wpw=document.querySelector("#wpwrap")
@@ -203,6 +241,7 @@ function Top(props){
         const {data} = event.nativeEvent
         currentUrl.current = data;
         console.log(data)
+        setLoading(false);
       }
       }  
       />
@@ -276,7 +315,11 @@ function Top(props){
           </View>
         </View>
       </Modal>
-     
+      {isLoading &&
+        <View style={styles.loading}>
+          <ActivityIndicator animating={animating} size="large" color="#0000ff" />
+        </View>
+      }
       <BottomTab opensearch={opensearch} navdo={stacknav} style={styles.bottomTab}></BottomTab>
     </SafeAreaView>
   );
@@ -407,7 +450,15 @@ keywordFormStack: {
   marginLeft: 1
 },
 
-
+loading: {
+  position: 'absolute',
+  left: 0,
+  right: 0,
+  top: 0,
+  bottom: 0,
+  alignItems: 'center',
+  justifyContent: 'center'
+}
 })
 
 export default Top;
