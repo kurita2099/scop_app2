@@ -26,7 +26,7 @@ import { IconButton } from 'react-native-paper';
 const HOMEURL =  "https://scop.cloud/";
 const SEARCHURL = "https://scop.cloud/";//上と内容が一生だけど、こっちはクエリがつく。
 const MANAGEURL = "https://scop.cloud/wp-admin/";
-const EDITPOSTURL = "https://scop.cloud/wp-admin/post-new.php";
+const EDITPOSTURL = "https://scop.cloud/wp-admin/edit.php";
 
 function Top(props){
     const [isLoading, setLoading] = React.useState(false);
@@ -88,9 +88,10 @@ function Top(props){
       case "Top":
         if(currentUrl.current !== HOMEURL){
           reloadUrl( HOMEURL );
+          setLoading(true);
         }else{
           setUrl(HOMEURL);
-          setLoading(true);
+         
           scrollTop();
         }
         break;
