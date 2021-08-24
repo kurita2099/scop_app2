@@ -1,12 +1,19 @@
 import React, { Component } from "react";
 import { StyleSheet, View } from "react-native";
 import { IconButton, Colors } from 'react-native-paper';
-  
-function BottomTab(props) {
 
-    const go_home = (() =>{
-	  props.navdo('Top')
-    });
+  function BottomTab(props) {
+
+
+    //とにかく戻る関数
+    const go_back =  (() =>{
+      props.goBack()
+      });
+
+
+      const go_home = (() =>{
+      props.navdo('Top')
+      });
     const go_newpost = (() =>{
 	  props.navdo('NewPost')
     });
@@ -19,15 +26,30 @@ function BottomTab(props) {
       }
     });
     return (
-    <View style={[styles.container, props.style]}>
-	<View style={styles.icon4Row}>
-	    <IconButton
-	      icon="home"
-	      style={styles.icon}
-	      color={Colors.blue500}
-	      size={30}
-		onPress={go_home}
-	  />
+
+      <View style={[styles.container, props.style]}>
+     {(() => {
+if (!props.flag){
+  return(<IconButton
+          icon="chevron-left"
+          style={styles.icon2}
+          color={Colors.blue500}
+          size={30}
+          onPress={go_back}
+          />
+        )}
+
+
+          })()}
+                <View style={styles.icon4Row}>
+
+          <IconButton
+            icon="home"
+            style={styles.icon}
+            color={Colors.blue500}
+            size={30}
+            onPress={go_home}
+	        />
 
 	  <IconButton
 	      icon="account"
@@ -36,7 +58,7 @@ function BottomTab(props) {
 	      size={30}
 	      onPress={go_ManagerTop}
 	  />
-          
+
 	  <IconButton
 	      icon="pen"
 	      style={styles.icon}
@@ -57,7 +79,7 @@ function BottomTab(props) {
     </View>
   );
 }
- 
+
 
 const styles = StyleSheet.create({
   container: {
@@ -75,9 +97,8 @@ const styles = StyleSheet.create({
   },
   icon2: {
     color: "rgba(0,0,0,0)",
-    fontSize: 60,
-      marginLeft: 20,
-    marginTop: 2
+    fontSize: 40,
+    position:'absolute'
   },
   icon: {
     color: "rgba(29,129,230,1)",
