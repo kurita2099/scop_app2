@@ -7,12 +7,12 @@ import OrButton from "../components/OrButton";
 import DropDownPicker from 'react-native-dropdown-picker';
 //import {Button, Card} from 'react-native-paper';
 
-import {View, 
-  SafeAreaView, 
-  StyleSheet, 
-  Text, 
-  Modal, 
-  Alert, 
+import {View,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  Modal,
+  Alert,
   ActivityIndicator,
   TouchableHighlight,
   Dimensions } from 'react-native'
@@ -29,17 +29,18 @@ const MANAGEURL = "https://scop.cloud/wp-admin/";
 const EDITPOSTURL = "https://scop.cloud/wp-admin/post-new.php";
 
 function Top(props){
-    const [isLoading, setLoading] = React.useState(false);
-    const [animating, setAnimating] = React.useState(true);
-    const [modalVisible, setModalVisible] = React.useState(false);
-    const [url, setUrl] = React.useState("https://scop.cloud/");
-    const [collapsed, setCollapsed] = React.useState(false);
-    const [isand, setIsand] = React.useState(true);
-    const [category, setCategory] = React.useState({});
-    const [categories, setCategories] = React.useState([]);
-    const [keyword, setKeyword] = React.useState("");
-    const ref = React.useRef(null);
-    const currentUrl = React.useRef("");
+  const [gobackIconFlag, setIconFlag] = React.useState(true);
+  const [isLoading, setLoading] = React.useState(false);
+  const [animating, setAnimating] = React.useState(true);
+  const [modalVisible, setModalVisible] = React.useState(false);
+  const [url, setUrl] = React.useState("https://scop.cloud/");
+  const [collapsed, setCollapsed] = React.useState(false);
+  const [isand, setIsand] = React.useState(true);
+  const [category, setCategory] = React.useState({});
+  const [categories, setCategories] = React.useState([]);
+  const [keyword, setKeyword] = React.useState("");
+  const ref = React.useRef(null);
+  const currentUrl = React.useRef("");
     React.useEffect(() => {
       console.log("step start")
       //サーバーから取得
@@ -48,7 +49,7 @@ function Top(props){
     const getData = async () => {
     //APIからJSONデータを取得する
     fetch('https://scop.cloud/wp-json/wp/v2/categories',{
-      
+
         crossDomain:true,
         method: 'GET',
     })
@@ -56,26 +57,26 @@ function Top(props){
         return response.json()　//ここでBodyからJSONを返す
       })
       .then((result) => {
-        //取得したJSONデータを関数に渡す 
+        //取得したJSONデータを関数に渡す
         //console.log(result)
-        
+
         setCategories(result.map(function( value ) {
- 
+
           //配列の各要素を2倍にする
           return {'label':value.name,'value':value.id};
-       
+
       }));
     })
     .catch((e) => {
-      console.log(e)  //エラーをキャッチし表示     
+      console.log(e)  //エラーをキャッチし表示
     })
     }
     const searchUrl = ()　=>　{　
       var query = '';
-      
+
       query += '?search_keywords=' + keyword;
       query += '&search_keywords_operator=' + (isand ? 'and' : 'or');
-      
+
       query += '&search_cat1=' + (category.value ? category.value : 0);
       console.log(query)
       //setUrl(SEARCHURL + query);
@@ -107,11 +108,17 @@ function Top(props){
         reloadUrl(EDITPOSTURL);
         setLoading(true);
         break;
-      
+
 
     }
-    
+
   });
+  const goBack = () =>{
+    const jscode = `
+   history.back()
+`
+    ref.current.injectJavaScript(jscode)
+  }
 
   const reloadUrl = (adress)=>{
     if(ref){
@@ -130,8 +137,8 @@ function Top(props){
   `;
     }
   }
-  
-  
+
+
   const scrollTop = ()=>{
     if(ref){
     const jscode = `
@@ -160,7 +167,7 @@ function Top(props){
       //if( y > _startY && Math.abs(y - _startY) > 50){
       //  alert("reflesh")
       //}
-    }); 
+    });
     }else{
       //alert("reload")
       //alert(getScrolled())
@@ -177,7 +184,7 @@ function Top(props){
     console.log(param);
     setModalVisible(true);
   };
-  
+
   const onPressItem= ((key)=>{
         console.log(key);
         setCollapsed(false)
@@ -186,18 +193,18 @@ function Top(props){
   const onPressAndOrButton= ((key)=>{
         console.log(key);
         setIsand(key === 'and');
-      });   
-  const toggleMenu= (val)=> {setCollapsed(!val)};  
-  const receiveKeyword= (val)=> {setKeyword(val)}; 
+      });
+  const toggleMenu= (val)=> {setCollapsed(!val)};
+  const receiveKeyword= (val)=> {setKeyword(val)};
 
   const [myArray, setMyArray]= React.useState([]);
   const [open, setOpen]= React.useState(false);
   const [value, setValue]=  React.useState(null);
-  
- 
+
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      
+
       <WebView
         source={{ uri: url }}
         style={styles.webview}
@@ -206,12 +213,13 @@ function Top(props){
         // WEBVIEWのURLが変わるたびに呼ばれる　現在のURLを送信する
         //window.location.hrefごとに処理を行えるようにする条件分岐
         window.ReactNativeWebView.postMessage(window.location.href);
-      
-        if(window.location.href == "${HOMEURL}"){
-          //バナーを消してメニューに項目をたす
+
+       //バナーを消してメニューに項目をたす
               document.querySelector('.banner_1').hidden = true;
               document.querySelector("#index_header_search").style.display ="none";
-              
+
+        if(window.location.href == "${HOMEURL}"){
+
               var ulds = document.querySelectorAll("#global_menu ul")
               var uld = ulds[ulds.length-1];
               var ld = document.querySelector("#global_menu li")
@@ -224,8 +232,8 @@ function Top(props){
               cl = ld.cloneNode(true);
               cl.setAttribute("id","menu-item-102")
               uld.appendChild(cl)
-              
-              
+
+
               var lld = document.querySelectorAll("#global_menu li a")
               var leng = lld.length - 3
               var node = lld[leng++]
@@ -237,8 +245,6 @@ function Top(props){
               node = lld[leng++]
               node.innerText="運営会社";
               node.setAttribute("href","https://minbar.jp/")
-              
-              
 
               }
         if(window.location.href == "${EDITPOSTURL}"){
@@ -252,13 +258,25 @@ function Top(props){
         document.getElementById("footer").hidden=true
         true; // 必須
       `}
-      onMessage={(event)=>{
-        const {data} = event.nativeEvent
-        currentUrl.current = data;
-        console.log(data)
-        setLoading(false);
-      }
-      }  
+        onMessage={(event)=>{
+          const {data} = event.nativeEvent
+          currentUrl.current = data;
+          if(data==HOMEURL)
+          {
+          //ホームはアイコンをけす。
+            setIconFlag(true)
+            console.log(`Homeだ${gobackIconFlag}`)
+          }
+          else{
+            //ここはもどる。
+            //
+            setIconFlag(false)
+            console.log(`Homeじゃない${gobackIconFlag}`)
+          }
+          console.log(data)
+          setLoading(false);
+        }
+                  }
       />
       <Modal
         animationType="slide"
@@ -266,11 +284,9 @@ function Top(props){
         visible={modalVisible}
         onRequestClose={() => {
           Alert.alert('Modal has been closed.');
-
         }}>
-          
-        <View style={styles.centeredView}>      
-          <View style={styles.modalView}> 
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
           <View style={styles.keywordFormStack}>
           <KeywordForm style={styles.keywordForm} sendKeyword={receiveKeyword}></KeywordForm>
           <AndButton style={isand ? styles.materialButtonVioletActive : styles.materialButtonViolet}
@@ -278,19 +294,19 @@ function Top(props){
           />
           <OrButton style={!isand ? styles.materialButtonPinkActive : styles.materialButtonPink}
           onpress={onPressAndOrButton}
-          />  
+          />
         </View>
-        
-          <View style={styles.dropdownView}>                        
+
+          <View style={styles.dropdownView}>
           <DropDownPicker
               items={categories}
               labelStyle = {{
                   fontSize: 18,
                   textAlign: 'center',
               }}
-              
+
               containerStyle={{position: 'relative',height:'20%',width: '100%', left: '0%', paddingTop: 10}}
-            
+
               style={{backgroundColor: 'hsla(100, 100%, 100%, 1)',color: 'black'}}
               dropDownStyle={{backgroundColor: 'hsla(100, 100%, 100%, 1)',color: 'black'}}
               onChangeItem={item => {
@@ -302,7 +318,7 @@ function Top(props){
                 color: 'blue',
                 textAlign: 'left',
               }}
-              placeholder = "カテゴリーから選ぶ" 
+              placeholder = "カテゴリーから選ぶ"
               placeholderStyle = {{
                   fontWeight: 'bold',
                   textAlign: 'left',
@@ -310,7 +326,7 @@ function Top(props){
               }}
               activeLabelStyle = {{color: 'black'}}
             />
-          </View>           
+          </View>
             <TouchableHighlight
               style={{ ...styles.openButton, backgroundColor: '#2196F3' }}
               onPress={() => {
@@ -318,15 +334,15 @@ function Top(props){
                 searchUrl();
               }}>
               <Text style={styles.textStyle}>検索</Text>
-            </TouchableHighlight>            
+            </TouchableHighlight>
           </View>
-          <View>            
+          <View>
             <IconButton icon="close" size={40}  style={styles.closeView}
             onPress={() => {
               setModalVisible(!modalVisible);
-              
+
             }}
-            /> 
+            />
           </View>
         </View>
       </Modal>
@@ -335,7 +351,12 @@ function Top(props){
           <ActivityIndicator animating={animating} size="large" color="#0000ff" />
         </View>
       }
-      <BottomTab opensearch={opensearch} navdo={stacknav} style={styles.bottomTab}></BottomTab>
+      <BottomTab
+        opensearch={opensearch}
+        navdo={stacknav}
+        goBack={goBack}
+        flag={gobackIconFlag}
+        style={styles.bottomTab}></BottomTab>
     </SafeAreaView>
   );
 
