@@ -305,9 +305,11 @@ function Top(props){
                   textAlign: 'center',
               }}
 
-              containerStyle={{position: 'relative',height:'20%',width: '100%', left: '0%', paddingTop: 10}}
+              containerStyle={{position: 'relative',height:'25%',width: '100%', left: '0%', paddingTop: 10}}
 
-              style={{backgroundColor: 'hsla(100, 100%, 100%, 1)',color: 'black'}}
+              style={{backgroundColor: 'hsla(100, 100%, 100%, 1)',color: 'black',
+              borderWidth: 0, marginTop:-8 
+            }}
               dropDownStyle={{backgroundColor: 'hsla(100, 100%, 100%, 1)',color: 'black'}}
               onChangeItem={item => {
                 console.log(JSON.stringify(item))
@@ -365,7 +367,7 @@ const styles = StyleSheet.create({
 dropdownView:{
   position: "absolute",
   left: 35,
-  top: 90,
+  top: 100,
   width: (400-100),
   borderColor: "rgba(29,129,230,1)",
   borderRadius: 8,
@@ -393,7 +395,7 @@ centeredView: {
 closeView: {
   marginTop: -20,
   top: -230,
-  marginLeft: 310,
+  marginLeft: 330,
 },
 modalView: {
   margin: 20,
