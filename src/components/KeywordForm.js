@@ -20,8 +20,8 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "rgba(230,230, 230,0)",
     borderWidth: 1,
-    borderColor: "rgba(29,129,230,1)",
-    borderRadius: 8
+    borderColor: "grey",
+    borderRadius: 5
   },
   キーワード: {
    

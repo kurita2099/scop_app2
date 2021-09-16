@@ -215,6 +215,8 @@ function Top(props){
         window.ReactNativeWebView.postMessage(window.location.href);
 
        //バナーを消してメニューに項目をたす
+
+              document.querySelector('#footer').hidden = true;
               document.querySelector('.banner_1').hidden = true;
               document.querySelector("#index_header_search").style.display ="none";
 
@@ -305,24 +307,23 @@ function Top(props){
                   textAlign: 'center',
               }}
 
-              containerStyle={{position: 'relative',height:'20%',width: '100%', left: '0%', paddingTop: 10}}
+            containerStyle={{position: 'relative',height:'100%',width: '100%', left: '0%', paddingTop: -10,borderRadius:10}}
 
-              style={{backgroundColor: 'hsla(100, 100%, 100%, 1)',color: 'black'}}
-              dropDownStyle={{backgroundColor: 'hsla(100, 100%, 100%, 1)',color: 'black'}}
+            style={{backgroundColor: 'hsla(100, 100%, 100%, 1)',color: 'black',borderColor:'grey'}}
+            dropDownStyle={{backgroundColor: 'hsla(100, 100%, 100%, 1)',color: 'black',borderColor:'grey'}}
               onChangeItem={item => {
                 console.log(JSON.stringify(item))
                 setCategory(item);
               }}
               labelStyle = {{
-                fontSize: 18,
-                color: 'blue',
+                fontSize: 15,
+                color: 'black',
                 textAlign: 'left',
               }}
               placeholder = "カテゴリーから選ぶ"
               placeholderStyle = {{
-                  fontWeight: 'bold',
                   textAlign: 'left',
-                  color: 'black'
+                  color: 'balck'
               }}
               activeLabelStyle = {{color: 'black'}}
             />
@@ -337,7 +338,8 @@ function Top(props){
             </TouchableHighlight>
           </View>
           <View>
-            <IconButton icon="close" size={40}  style={styles.closeView}
+            <IconButton icon="close" size={34}  style={styles.closeView}
+                        color={'grey'}
             onPress={() => {
               setModalVisible(!modalVisible);
 
@@ -367,7 +369,8 @@ dropdownView:{
   left: 35,
   top: 90,
   width: (400-100),
-  borderColor: "rgba(29,129,230,1)",
+  height:50,
+  borderColor: "rgba(0,0,0,0)",
   borderRadius: 8,
   borderWidth: 1,
   elevation: 3000,
@@ -392,21 +395,22 @@ centeredView: {
 },
 closeView: {
   marginTop: -20,
-  top: -230,
-  marginLeft: 310,
+  top: -228,
+  marginLeft: 330,
 },
 modalView: {
   margin: 20,
   backgroundColor: 'white',
   borderRadius: 20,
+  borderColor:'black',
   paddingTop: 30,
   paddingBottom:20,
   paddingLeft: 35,
   paddingRight: 35,
   alignItems: 'center',
-  shadowColor: '#000',
+  shadowColor: '#999',
   shadowOffset: {
-    width: 0,
+    width: 2,
     height: 2,
   },
   shadowOpacity: 0.25,
