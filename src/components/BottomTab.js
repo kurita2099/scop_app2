@@ -34,7 +34,7 @@ if (!props.flag){
           icon="chevron-left"
           style={styles.icon2}
           color={Colors.blue500}
-          size={30}
+          size={40}
           onPress={go_back}
           />
         )}
@@ -84,7 +84,9 @@ if (!props.flag){
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "rgba(255,255,255,1)",
-    flexDirection: "row"
+    flexDirection: "row",
+    zIndex:0,
+    elevation:0
   },
   icon4: {
     color: "rgba(29,129,230,1)",
@@ -96,9 +98,11 @@ const styles = StyleSheet.create({
     marginLeft: 51
   },
   icon2: {
-    color: "rgba(0,0,0,0)",
-    fontSize: 40,
-    position:'absolute'
+    position:'absolute',
+    zIndex:1,
+    top:-7,
+    left:-14,
+    elevation:2
   },
   icon: {
     color: "rgba(29,129,230,1)",
